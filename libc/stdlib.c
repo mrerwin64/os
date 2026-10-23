@@ -1,5 +1,6 @@
-#include <stddef.h>
 #include <stdlib.h>
+
+#include <stddef.h>
 
 int atoi(const char* a) {
     size_t i = 0;
@@ -41,7 +42,7 @@ void itoa(const int i, char* a) {
     }
 
     a[length] = '\0';
-    for (size_t j = length; j-- > 0; ) {
+    for (size_t j = length; j-- > 0;) {
         a[j] = (char)(u % 10 + '0');
         u /= 10;
     }

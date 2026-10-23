@@ -7,4 +7,4 @@ static inline __attribute__((unused)) void busy_wait(const unsigned long iterati
     }
 }
 
-#endif //OS_DELAY_H
+#endif // OS_DELAY_H

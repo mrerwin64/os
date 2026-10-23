@@ -5,4 +5,4 @@
 
 size_t strlen(const char* str);
 
-#endif //OS_STRING_H
+#endif // OS_STRING_H

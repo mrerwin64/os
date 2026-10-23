@@ -1,7 +1,9 @@
-#include <stdint.h>
-#include <stddef.h>
-#include <string.h>
 #include <kernel/tty.h>
+
+#include <stddef.h>
+#include <stdint.h>
+#include <string.h>
+
 #include "vga.h"
 
 static size_t tty_row;
@@ -10,8 +12,8 @@ static uint8_t tty_color;
 static volatile uint16_t* tty_buffer = (uint16_t*)VGA_MEMORY;
 
 void tty_init(void) {
-    __asm__ volatile ("outb %0, %1" : : "a"((uint8_t)0x0A), "Nd"((uint16_t)0x3D4)); // Select cursor start register
-    __asm__ volatile ("outb %0, %1" : : "a"((uint8_t)0x20), "Nd"((uint16_t)0x3D5)); // Disable the cursor
+    __asm__ volatile("outb %0, %1" : : "a"((uint8_t)0x0A), "Nd"((uint16_t)0x3D4)); // Select cursor start register
+    __asm__ volatile("outb %0, %1" : : "a"((uint8_t)0x20), "Nd"((uint16_t)0x3D5)); // Disable the cursor
 
     tty_row = 0;
     tty_column = 0;

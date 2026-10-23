@@ -1,8 +1,11 @@
+#include <kernel/logo.h>
+
 #include <stddef.h>
 #include <stdint.h>
+
 #include <kernel/delay.h>
-#include <kernel/logo.h>
 #include <kernel/tty.h>
+
 #include "vga.h"
 
 // Peugeot lion, one entry per text cell of the 80x25 screen.

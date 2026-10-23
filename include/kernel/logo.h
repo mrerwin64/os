@@ -3,4 +3,4 @@
 
 void logo_draw(unsigned long delay);
 
-#endif //OS_LOGO_H
+#endif // OS_LOGO_H

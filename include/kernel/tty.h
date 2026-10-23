@@ -1,8 +1,8 @@
 #ifndef OS_TTY_H
 #define OS_TTY_H
 
-#include <stdint.h>
 #include <stddef.h>
+#include <stdint.h>
 
 enum tty_color {
     TTY_COLOR_BLACK = 0,
@@ -30,4 +30,4 @@ void tty_write(const char* data, size_t size);
 void tty_write_string(const char* data);
 void tty_scroll(unsigned int rows);
 
-#endif //OS_TTY_H
+#endif // OS_TTY_H

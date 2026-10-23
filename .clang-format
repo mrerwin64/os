@@ -1,0 +1,54 @@
+# clang-format configuration matching the project's existing style.
+# CLion uses it automatically when reformatting code (Ctrl+Alt+L).
+BasedOnStyle: LLVM
+Language: Cpp
+
+# Indentation: 4 spaces, never tabs
+IndentWidth: 4
+TabWidth: 4
+UseTab: Never
+ColumnLimit: 120
+
+# Braces: opening brace on the same line, "else" on its own line after "}"
+BreakBeforeBraces: Custom
+BraceWrapping:
+  AfterFunction: false
+  AfterControlStatement: Never
+  AfterEnum: false
+  AfterStruct: false
+  AfterUnion: false
+  BeforeElse: true
+InsertBraces: true
+
+# Never squeeze bodies onto one line, except trivial switch cases
+AllowShortBlocksOnASingleLine: Never
+AllowShortFunctionsOnASingleLine: None
+AllowShortIfStatementsOnASingleLine: Never
+AllowShortLoopsOnASingleLine: false
+AllowShortCaseLabelsOnASingleLine: true
+AlignConsecutiveShortCaseStatements:
+  Enabled: true
+IndentCaseLabels: false
+
+# "const char* data", "(uint8_t)value"
+PointerAlignment: Left
+DerivePointerAlignment: false
+SpaceAfterCStyleCast: false
+
+# Keep "#define NAME   value" columns lined up
+AlignConsecutiveMacros: Consecutive
+
+# Includes: own header, then <standard>, then <kernel/...>, then "private"
+SortIncludes: CaseSensitive
+IncludeBlocks: Regroup
+MainIncludeChar: Any
+IncludeCategories:
+  - Regex: '^<kernel/'
+    Priority: 3
+  - Regex: '^<'
+    Priority: 2
+  - Regex: '^"'
+    Priority: 4
+
+MaxEmptyLinesToKeep: 1
+InsertNewlineAtEOF: true

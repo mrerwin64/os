@@ -4,4 +4,4 @@
 int atoi(const char* a);
 void itoa(int i, char* a);
 
-#endif //OS_STDLIB_H
+#endif // OS_STDLIB_H

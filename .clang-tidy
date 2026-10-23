@@ -2,8 +2,7 @@
 # CLion picks this up automatically ("Prefer .clang-tidy files over IDE settings").
 #
 # Enabled: whole groups that apply to C code. Disabled below: checks that are
-# noise for this project (C++-only advice, hosted-libc assumptions, or style
-# rules that fight normal kernel code).
+# noise for this project (style rules that fight normal kernel code).
 Checks: >
   -*,
   bugprone-*,
@@ -14,7 +13,6 @@ Checks: >
   portability-*,
   readability-*,
   -bugprone-easily-swappable-parameters,
-  -misc-include-cleaner,
   -portability-no-assembler,
   -readability-identifier-length,
   -readability-magic-numbers,

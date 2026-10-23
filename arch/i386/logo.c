@@ -102,15 +102,15 @@ static const char bg[VGA_HEIGHT][VGA_WIDTH + 1] = {
 
 static unsigned char glyph(const char c) {
     switch (c) {
-    case '#': return 0xDB;
-    case '^': return 0xDF;
-    case '_': return 0xDC;
-    case '[': return 0xDD;
-    case ']': return 0xDE;
-    case ':': return 0xB0;
-    case '%': return 0xB1;
-    case '@': return 0xB2;
-    default:  return ' ';
+        case '#': return 0xDB;
+        case '^': return 0xDF;
+        case '_': return 0xDC;
+        case '[': return 0xDD;
+        case ']': return 0xDE;
+        case ':': return 0xB0;
+        case '%': return 0xB1;
+        case '@': return 0xB2;
+        default:  return ' ';
     }
 }
 

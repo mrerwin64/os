@@ -28,7 +28,7 @@ AllowShortLoopsOnASingleLine: false
 AllowShortCaseLabelsOnASingleLine: true
 AlignConsecutiveShortCaseStatements:
   Enabled: true
-IndentCaseLabels: false
+IndentCaseLabels: true
 
 # "const char* data", "(uint8_t)value"
 PointerAlignment: Left

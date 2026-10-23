@@ -1,18 +1,13 @@
+#include <kernel/delay.h>
 #include <kernel/logo.h>
 #include <kernel/tty.h>
 #include <stdlib.h>
-
-static void busy_wait(const unsigned long iterations) {
-	for (volatile unsigned long j = 0; j < iterations; j++) {
-		;
-	}
-}
 
 // ReSharper disable once CppUseInternalLinkage
 void kernel_main(void) { // NOLINT(*-use-internal-linkage)
 	tty_init();
 
-	logo_draw();
+	logo_draw(1000000);
 	busy_wait(1000000000);
 
 	tty_write_string("Hello, kernel World!\n");

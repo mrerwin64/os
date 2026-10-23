@@ -1,5 +1,6 @@
 #include <stddef.h>
 #include <stdint.h>
+#include <kernel/delay.h>
 #include <kernel/logo.h>
 #include <kernel/tty.h>
 #include "vga.h"
@@ -114,8 +115,8 @@ static uint8_t hex_digit(const char c) {
     return c <= '9' ? c - '0' : c - 'a' + 10;
 }
 
-// Draws the lion over whatever is on screen, skipping transparent cells.
-void logo_draw(void) {
+// Draws the lion over whatever is on screen, skipping transparent cells, with an optional delay between drawn cells.
+void logo_draw(const unsigned long delay) {
     for (size_t y = 0; y < VGA_HEIGHT; y++) {
         for (size_t x = 0; x < VGA_WIDTH; x++) {
             if (shape[y][x] == '.') {
@@ -124,6 +125,7 @@ void logo_draw(void) {
 
             const uint8_t color = vga_entry_color(hex_digit(fg[y][x]), hex_digit(bg[y][x]));
             tty_put_char_at((char)glyph(shape[y][x]), color, x, y);
+            busy_wait(delay);
         }
     }
 }

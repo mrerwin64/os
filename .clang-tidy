@@ -1,0 +1,26 @@
+# clang-tidy configuration for a freestanding C kernel.
+# CLion picks this up automatically ("Prefer .clang-tidy files over IDE settings").
+#
+# Enabled: whole groups that apply to C code. Disabled below: checks that are
+# noise for this project (C++-only advice, hosted-libc assumptions, or style
+# rules that fight normal kernel code).
+Checks: >
+  -*,
+  bugprone-*,
+  cert-*,
+  clang-analyzer-*,
+  misc-*,
+  performance-*,
+  portability-*,
+  readability-*,
+  -bugprone-easily-swappable-parameters,
+  -misc-include-cleaner,
+  -portability-no-assembler,
+  -readability-identifier-length,
+  -readability-magic-numbers,
+  -readability-math-missing-parentheses
+
+# Report problems in the project's own headers too (vga.h, tty.h, ...).
+HeaderFilterRegex: '.*/(arch|include|kernel|libc)/.*'
+
+WarningsAsErrors: ''

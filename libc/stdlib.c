@@ -34,7 +34,7 @@ void itoa(const int i, char* a) {
     }
 
     size_t length = 1;
-    int copy = u / 10;
+    unsigned int copy = u / 10;
     while (copy > 0) {
         length += 1;
         copy /= 10;
@@ -42,7 +42,7 @@ void itoa(const int i, char* a) {
 
     a[length] = '\0';
     for (size_t j = length; j-- > 0; ) {
-        a[j] = u % 10 + '0';
+        a[j] = (char)(u % 10 + '0');
         u /= 10;
     }
 }

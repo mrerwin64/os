@@ -28,5 +28,6 @@ void tty_put_char_at(char c, uint8_t color, size_t x, size_t y);
 void tty_put_char(char c);
 void tty_write(const char* data, size_t size);
 void tty_write_string(const char* data);
+void tty_scroll(unsigned int rows);
 
 #endif //OS_TTY_H

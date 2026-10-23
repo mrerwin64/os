@@ -2,9 +2,18 @@
 #include <kernel/tty.h>
 #include <stdlib.h>
 
-void kernel_main(void)
-{
+static void busy_wait(const unsigned long iterations) {
+	for (volatile unsigned long j = 0; j < iterations; j++) {
+		;
+	}
+}
+
+// ReSharper disable once CppUseInternalLinkage
+void kernel_main(void) { // NOLINT(*-use-internal-linkage)
 	tty_init();
+
+	logo_draw();
+	busy_wait(1000000000);
 
 	tty_write_string("Hello, kernel World!\n");
 	tty_write_string("Newline test\n");
@@ -13,9 +22,14 @@ void kernel_main(void)
 		itoa(i, text);
 		tty_write_string(text);
 		tty_put_char(' ');
-		for (volatile unsigned long j = 0; j < 5000000; j++) {
-			;
-		}
+		busy_wait(2000000);
 	}
-	logo_draw();
+
+	for (int i = 0; i < 5; i++) {
+		tty_scroll(1);
+		tty_scroll(2);
+		busy_wait(100000000);
+	}
+	tty_write_string("Scroll cursor move test");
+	tty_write_string("\nNewline test 2");
 }

@@ -96,8 +96,7 @@ static const char bg[VGA_HEIGHT][VGA_WIDTH + 1] = {
     "00000000000000000000000000000000000000000000000000000000000000000000000000000000",
 };
 
-static unsigned char glyph(char c)
-{
+static unsigned char glyph(const char c) {
     switch (c) {
     case '#': return 0xDB;
     case '^': return 0xDF;
@@ -111,20 +110,19 @@ static unsigned char glyph(char c)
     }
 }
 
-static uint8_t hex_digit(char c)
-{
+static uint8_t hex_digit(const char c) {
     return c <= '9' ? c - '0' : c - 'a' + 10;
 }
 
 // Draws the lion over whatever is on screen, skipping transparent cells.
-void logo_draw(void)
-{
+void logo_draw(void) {
     for (size_t y = 0; y < VGA_HEIGHT; y++) {
         for (size_t x = 0; x < VGA_WIDTH; x++) {
-            if (shape[y][x] == '.')
+            if (shape[y][x] == '.') {
                 continue;
+            }
 
-            uint8_t color = vga_entry_color(hex_digit(fg[y][x]), hex_digit(bg[y][x]));
+            const uint8_t color = vga_entry_color(hex_digit(fg[y][x]), hex_digit(bg[y][x]));
             tty_put_char_at((char)glyph(shape[y][x]), color, x, y);
         }
     }

@@ -24,4 +24,12 @@ void kernel_main(void) { // NOLINT(*-use-internal-linkage)
     }
     tty_write_string("Scroll cursor move test");
     tty_write_string("\nNewline test 2");
+
+    busy_wait(999999999);
+    unsigned int i = 0;
+    while (i < (unsigned int)-1) {
+        kprintf("%u %u \n", i, i*i);
+        busy_wait(i*i);
+        i++;
+    }
 }

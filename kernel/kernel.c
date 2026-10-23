@@ -1,6 +1,5 @@
-#include <stdlib.h>
-
 #include <kernel/delay.h>
+#include <kernel/kprintf.h>
 #include <kernel/logo.h>
 #include <kernel/tty.h>
 
@@ -14,10 +13,7 @@ void kernel_main(void) { // NOLINT(*-use-internal-linkage)
     tty_write_string("Hello, kernel World!\n");
     tty_write_string("Newline test\n");
     for (unsigned int i = 0; i < 1000; i++) {
-        char text[4];
-        utoa(i, text, 10);
-        tty_write_string(text);
-        tty_put_char(' ');
+        kprintf("%u ", i);
         busy_wait(2000000);
     }
 

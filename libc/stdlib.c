@@ -26,24 +26,35 @@ int atoi(const char* a) {
     return sign * result;
 }
 
-void itoa(const int i, char* a) {
-    unsigned int u = i;
+static const char utoa_chars[] = "0123456789abcdefghijklmnopqrstuvwxyz";
+
+void utoa(unsigned int u, char* a, const unsigned int base) {
+    if (base < 2 || base > 36) {
+        a[0] = '\0';
+        return;
+    }
+
+    size_t length = 1;
+    unsigned int copy = u / base;
+    while (copy > 0) {
+        length += 1;
+        copy /= base;
+    }
+
+    a[length] = '\0';
+    for (size_t j = length; j-- > 0;) {
+        a[j] = utoa_chars[u % base];
+        u /= base;
+    }
+}
+
+void itoa(const int i, char* a, const unsigned int base) {
+    unsigned int u = (unsigned int)i;
     if (i < 0) {
         a[0] = '-';
         a++;
         u = -u;
     }
 
-    size_t length = 1;
-    unsigned int copy = u / 10;
-    while (copy > 0) {
-        length += 1;
-        copy /= 10;
-    }
-
-    a[length] = '\0';
-    for (size_t j = length; j-- > 0;) {
-        a[j] = (char)(u % 10 + '0');
-        u /= 10;
-    }
+    utoa(u, a, base);
 }

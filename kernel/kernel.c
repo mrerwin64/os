@@ -31,6 +31,7 @@ void kernel_main(void) { // NOLINT(*-use-internal-linkage)
     tty_write_string("\nNewline test 2");
 
     busy_wait(999999999);
+    tty_scroll(tty_height());
     const size_t width = tty_width();
     const size_t height = tty_height();
     int box_x = 1;
@@ -61,7 +62,7 @@ void kernel_main(void) { // NOLINT(*-use-internal-linkage)
         }
         box_y += move_y;
 
-        kprintf("\n%u %u", i, i * i * i);
+        kprintf("\n%u %u", i, i * i);
 
         // Draw the new box
         tty_set_color_at(tty_make_color(TTY_COLOR_BLACK, box_colors[i % 4]), box_x, box_y);
@@ -69,7 +70,7 @@ void kernel_main(void) { // NOLINT(*-use-internal-linkage)
         tty_set_color_at(tty_make_color(TTY_COLOR_BLACK, box_colors[(i + 3) % 4]), box_x, box_y + 1);
         tty_set_color_at(tty_make_color(TTY_COLOR_BLACK, box_colors[(i + 2) % 4]), box_x + 1, box_y + 1);
 
-        busy_wait(i * i * i);
+        busy_wait(i * i + 10000000);
         i++;
     }
 }

@@ -26,9 +26,9 @@ int atoi(const char* a) {
     return sign * result;
 }
 
-static const char utoa_chars[] = "0123456789abcdefghijklmnopqrstuvwxyz";
-
 void utoa(unsigned int u, char* a, const unsigned int base) {
+    static const char digits[] = "0123456789abcdefghijklmnopqrstuvwxyz";
+
     if (base < 2 || base > 36) {
         a[0] = '\0';
         return;
@@ -43,7 +43,7 @@ void utoa(unsigned int u, char* a, const unsigned int base) {
 
     a[length] = '\0';
     for (size_t j = length; j-- > 0;) {
-        a[j] = utoa_chars[u % base];
+        a[j] = digits[u % base];
         u /= base;
     }
 }

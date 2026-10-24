@@ -126,7 +126,7 @@ void logo_draw(const unsigned long delay) {
                 continue;
             }
 
-            const uint8_t color = vga_entry_color(hex_digit(fg[y][x]), hex_digit(bg[y][x]));
+            const uint8_t color = vga_make_color(hex_digit(fg[y][x]), hex_digit(bg[y][x]));
             tty_put_char_at((char)glyph(shape[y][x]), color, x, y);
             busy_wait(delay);
         }

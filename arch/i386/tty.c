@@ -7,23 +7,35 @@
 #include "io.h"
 #include "vga.h"
 
-static size_t tty_row;
-static size_t tty_column;
-static uint8_t tty_color;
-static volatile uint16_t* tty_buffer = (uint16_t*)VGA_MEMORY;
+static size_t current_row;
+static size_t current_column;
+static uint8_t current_color;
+static volatile uint16_t* vga_buffer = (uint16_t*)VGA_MEMORY;
 
-void tty_init(void) {
+static void disable_cursor(void) {
     outb(0x3D4, 0x0A); // Select cursor start register
     outb(0x3D5, 0x20); // Disable the cursor
+}
 
-    tty_row = 0;
-    tty_column = 0;
-    tty_color = vga_entry_color(TTY_COLOR_LIGHT_GREY, TTY_COLOR_BLACK);
+static void disable_blinking(void) {
+    (void)inb(0x3DA);                         // Make next write to 0x3C0 select register
+    outb(0x3C0, 0x30);                        // Select register 0x10 but with bit 5 set to 1
+    const uint8_t mode = inb(0x3C1) & ~0x08U; // Read the current state and clear bit 3
+    outb(0x3C0, mode);                        // Write the mode back
+}
+
+void tty_init(void) {
+    disable_cursor();
+    disable_blinking();
+
+    current_row = 0;
+    current_column = 0;
+    current_color = vga_make_color(TTY_COLOR_LIGHT_GREY, TTY_COLOR_BLACK);
 
     for (size_t y = 0; y < VGA_HEIGHT; y++) {
         for (size_t x = 0; x < VGA_WIDTH; x++) {
             const size_t index = y * VGA_WIDTH + x;
-            tty_buffer[index] = vga_entry(' ', tty_color);
+            vga_buffer[index] = vga_make_entry(' ', current_color);
         }
     }
 }
@@ -35,49 +47,64 @@ void tty_scroll(unsigned int rows) {
 
     for (size_t row = 0; row < VGA_HEIGHT - rows; row++) {
         for (size_t column = 0; column < VGA_WIDTH; column++) {
-            tty_buffer[row * VGA_WIDTH + column] = tty_buffer[(row + rows) * VGA_WIDTH + column];
+            vga_buffer[row * VGA_WIDTH + column] = vga_buffer[(row + rows) * VGA_WIDTH + column];
         }
     }
 
     for (size_t row = VGA_HEIGHT - rows; row < VGA_HEIGHT; row++) {
         for (size_t column = 0; column < VGA_WIDTH; column++) {
-            tty_buffer[row * VGA_WIDTH + column] = vga_entry(' ', tty_color);
+            vga_buffer[row * VGA_WIDTH + column] = vga_make_entry(' ', current_color);
         }
     }
 
-    if (tty_row >= rows) {
-        tty_row -= rows;
+    if (current_row >= rows) {
+        current_row -= rows;
     }
     else {
-        tty_row = 0;
-        tty_column = 0;
+        current_row = 0;
+        current_column = 0;
     }
 }
 
 static void tty_newline(void) {
-    if (++tty_row == VGA_HEIGHT) {
+    if (++current_row == VGA_HEIGHT) {
         tty_scroll(1);
     }
-    tty_column = 0;
+    current_column = 0;
 }
 
 void tty_put_char_at(const char c, const uint8_t color, const size_t x, const size_t y) {
     const size_t index = y * VGA_WIDTH + x;
-    tty_buffer[index] = vga_entry(c, color);
+    vga_buffer[index] = vga_make_entry(c, color);
 }
 
-void tty_set_color_at(uint8_t fg, uint8_t bg, const size_t x, const size_t y) {
+void tty_set_fg_at(const uint8_t fg, const size_t x, const size_t y) {
     const size_t index = y * VGA_WIDTH + x;
-    const uint16_t current_entry = tty_buffer[index];
-    if (fg == TTY_COLOR_KEEP) {
-        fg = ((unsigned int)current_entry >> 8U) & 0x0FU;
-    }
-    if (bg == TTY_COLOR_KEEP) {
-        bg = current_entry >> 12U;
-    }
-    const uint8_t color = vga_entry_color(fg, bg);
-    const unsigned char glyph = (unsigned char)(current_entry & 0x00FFU);
-    tty_buffer[index] = vga_entry(glyph, color);
+    const uint16_t entry = vga_buffer[index];
+    const uint8_t bg = vga_color_bg(vga_entry_color(entry));
+    const unsigned char glyph = vga_entry_glyph(entry);
+    const uint8_t color = vga_make_color(fg, bg);
+    vga_buffer[index] = vga_make_entry(glyph, color);
+}
+
+void tty_set_bg_at(const uint8_t bg, const size_t x, const size_t y) {
+    const size_t index = y * VGA_WIDTH + x;
+    const uint16_t entry = vga_buffer[index];
+    const uint8_t fg = vga_color_fg(vga_entry_color(entry));
+    const unsigned char glyph = vga_entry_glyph(entry);
+    const uint8_t color = vga_make_color(fg, bg);
+    vga_buffer[index] = vga_make_entry(glyph, color);
+}
+
+void tty_set_color_at(const uint8_t color, const size_t x, const size_t y) {
+    const size_t index = y * VGA_WIDTH + x;
+    const uint16_t entry = vga_buffer[index];
+    const unsigned char glyph = vga_entry_glyph(entry);
+    vga_buffer[index] = vga_make_entry(glyph, color);
+}
+
+void tty_set_color(const uint8_t color) {
+    current_color = color;
 }
 
 void tty_put_char(const char c) {
@@ -86,8 +113,8 @@ void tty_put_char(const char c) {
         return;
     }
 
-    tty_put_char_at(c, tty_color, tty_column, tty_row);
-    if (++tty_column == VGA_WIDTH) {
+    tty_put_char_at(c, current_color, current_column, current_row);
+    if (++current_column == VGA_WIDTH) {
         tty_newline();
     }
 }
@@ -100,4 +127,20 @@ void tty_write(const char* data, const size_t size) {
 
 void tty_write_string(const char* data) {
     tty_write(data, strlen(data));
+}
+
+size_t tty_width(void) {
+    return VGA_WIDTH;
+}
+
+size_t tty_height(void) {
+    return VGA_HEIGHT;
+}
+
+uint8_t tty_get_color_at(const size_t x, const size_t y) {
+    return vga_entry_color(vga_buffer[y * VGA_WIDTH + x]);
+}
+
+uint8_t tty_get_color(void) {
+    return current_color;
 }

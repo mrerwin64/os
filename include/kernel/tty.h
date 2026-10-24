@@ -21,15 +21,21 @@ enum tty_color {
     TTY_COLOR_LIGHT_MAGENTA = 13,
     TTY_COLOR_LIGHT_BROWN = 14,
     TTY_COLOR_WHITE = 15,
-    TTY_COLOR_KEEP = 0xFF,
 };
 
 void tty_init(void);
 void tty_put_char_at(char c, uint8_t color, size_t x, size_t y);
-void tty_set_color_at(uint8_t fg, uint8_t bg, size_t x, size_t y);
+void tty_set_fg_at(uint8_t fg, size_t x, size_t y);
+void tty_set_bg_at(uint8_t bg, size_t x, size_t y);
+void tty_set_color_at(uint8_t color, size_t x, size_t y);
+void tty_set_color(uint8_t color);
 void tty_put_char(char c);
 void tty_write(const char* data, size_t size);
 void tty_write_string(const char* data);
 void tty_scroll(unsigned int rows);
+size_t tty_width(void);
+size_t tty_height(void);
+uint8_t tty_get_color_at(size_t x, size_t y);
+uint8_t tty_get_color(void);
 
 #endif // OS_TTY_H

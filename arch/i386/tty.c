@@ -144,3 +144,7 @@ uint8_t tty_get_color_at(const size_t x, const size_t y) {
 uint8_t tty_get_color(void) {
     return current_color;
 }
+
+uint8_t tty_make_color(const uint8_t fg, const uint8_t bg) {
+    return vga_make_color(fg, bg);
+}

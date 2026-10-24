@@ -37,5 +37,6 @@ size_t tty_width(void);
 size_t tty_height(void);
 uint8_t tty_get_color_at(size_t x, size_t y);
 uint8_t tty_get_color(void);
+uint8_t tty_make_color(uint8_t fg, uint8_t bg);
 
 #endif // OS_TTY_H

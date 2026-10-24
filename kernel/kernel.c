@@ -62,10 +62,10 @@ void kernel_main(void) { // NOLINT(*-use-internal-linkage)
         kprintf("\n%u %u", i, i * i * i);
 
         // Draw the new box
-        tty_set_bg_at(box_colors[i % 4], box_x, box_y);
-        tty_set_bg_at(box_colors[(i + 1) % 4], box_x + 1, box_y);
-        tty_set_bg_at(box_colors[(i + 3) % 4], box_x, box_y + 1);
-        tty_set_bg_at(box_colors[(i + 2) % 4], box_x + 1, box_y + 1);
+        tty_set_color_at(tty_make_color(TTY_COLOR_BLACK, box_colors[i % 4]), box_x, box_y);
+        tty_set_color_at(tty_make_color(TTY_COLOR_BLACK, box_colors[(i + 1) % 4]), box_x + 1, box_y);
+        tty_set_color_at(tty_make_color(TTY_COLOR_BLACK, box_colors[(i + 3) % 4]), box_x, box_y + 1);
+        tty_set_color_at(tty_make_color(TTY_COLOR_BLACK, box_colors[(i + 2) % 4]), box_x + 1, box_y + 1);
 
         busy_wait(i * i * i);
         i++;

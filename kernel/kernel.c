@@ -1,3 +1,6 @@
+#include <stddef.h>
+#include <stdint.h>
+
 #include <kernel/delay.h>
 #include <kernel/kprintf.h>
 #include <kernel/logo.h>
@@ -26,10 +29,45 @@ void kernel_main(void) { // NOLINT(*-use-internal-linkage)
     tty_write_string("\nNewline test 2");
 
     busy_wait(999999999);
+    const size_t width = tty_width();
+    const size_t height = tty_height();
+    int box_x = 1;
+    int box_y = 1;
+    int move_x = -1;
+    int move_y = -1;
     unsigned int i = 0;
+    static const uint8_t box_colors[] = {
+        TTY_COLOR_LIGHT_BLUE,
+        TTY_COLOR_LIGHT_MAGENTA,
+        TTY_COLOR_LIGHT_GREEN,
+        TTY_COLOR_LIGHT_RED,
+    };
     while (i < (unsigned int)-1) {
-        kprintf("%u %u \n", i, i*i);
-        busy_wait(i*i);
+        // Remove the current box
+        tty_set_color_at(tty_get_color(), box_x, box_y);
+        tty_set_color_at(tty_get_color(), box_x + 1, box_y);
+        tty_set_color_at(tty_get_color(), box_x, box_y + 1);
+        tty_set_color_at(tty_get_color(), box_x + 1, box_y + 1);
+
+        // Move the box cursor
+        if (box_x == 0 || (size_t)box_x == width - 2) {
+            move_x *= -1;
+        }
+        box_x += move_x;
+        if (box_y == 0 || (size_t)box_y == height - 2) {
+            move_y *= -1;
+        }
+        box_y += move_y;
+
+        kprintf("\n%u %u", i, i * i * i);
+
+        // Draw the new box
+        tty_set_bg_at(box_colors[i % 4], box_x, box_y);
+        tty_set_bg_at(box_colors[(i + 1) % 4], box_x + 1, box_y);
+        tty_set_bg_at(box_colors[(i + 3) % 4], box_x, box_y + 1);
+        tty_set_bg_at(box_colors[(i + 2) % 4], box_x + 1, box_y + 1);
+
+        busy_wait(i * i * i);
         i++;
     }
 }

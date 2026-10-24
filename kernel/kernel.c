@@ -1,6 +1,7 @@
 #include <stddef.h>
 #include <stdint.h>
 
+#include <kernel/arch.h>
 #include <kernel/delay.h>
 #include <kernel/kprintf.h>
 #include <kernel/logo.h>
@@ -9,6 +10,7 @@
 // ReSharper disable once CppUseInternalLinkage
 void kernel_main(void) { // NOLINT(*-use-internal-linkage)
     tty_init();
+    arch_init();
 
     logo_draw(1000000);
     busy_wait(1000000000);

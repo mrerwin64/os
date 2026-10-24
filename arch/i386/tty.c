@@ -66,6 +66,20 @@ void tty_put_char_at(const char c, const uint8_t color, const size_t x, const si
     tty_buffer[index] = vga_entry(c, color);
 }
 
+void tty_set_color_at(uint8_t fg, uint8_t bg, const size_t x, const size_t y) {
+    const size_t index = y * VGA_WIDTH + x;
+    const uint16_t current_entry = tty_buffer[index];
+    if (fg == TTY_COLOR_KEEP) {
+        fg = ((unsigned int)current_entry >> 8U) & 0x0FU;
+    }
+    if (bg == TTY_COLOR_KEEP) {
+        bg = current_entry >> 12U;
+    }
+    const uint8_t color = vga_entry_color(fg, bg);
+    const unsigned char glyph = (unsigned char)(current_entry & 0x00FFU);
+    tty_buffer[index] = vga_entry(glyph, color);
+}
+
 void tty_put_char(const char c) {
     if (c == '\n') {
         tty_newline();

@@ -11,8 +11,8 @@ static inline __attribute__((unused)) uint8_t vga_entry_color(const uint8_t fg, 
     return (uint8_t)(fg | (unsigned int)bg << 4U);
 }
 
-static inline __attribute__((unused)) uint16_t vga_entry(const unsigned char uc, const uint8_t color) {
-    return (uint16_t)(uc | (unsigned int)color << 8U);
+static inline __attribute__((unused)) uint16_t vga_entry(const unsigned char glyph, const uint8_t color) {
+    return (uint16_t)(glyph | (unsigned int)color << 8U);
 }
 
 #endif // OS_VGA_H
